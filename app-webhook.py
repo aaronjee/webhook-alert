@@ -18,22 +18,29 @@ def webhook():
     # 메세지 가공
     alerts = alert_json.get('alerts', [])
     messages = []
+    title = []
   
     for alert in alerts:
         labels = alert.get('labels', {})
         annotations = alert.get('annotations', {})
-        msg = f"Alert" {labels.get('alertname')} - {annotations.get('summary', '')}"
-        message_text = "\n.join(messages)
+        #msg = f"Alert" {labels.get('alertname')} - {annotations.get('summary', '')}"
+        msg = f"NAMESPACE: {labels.get('namespace')} \nPod: {labels.get('pod')} \nStatus: {labels.get('reason')}"
+        title = f"NAMESPACE: {labels.get('namespace')} > Status: {labels.get('alertname')}"
+        messages.append(msg)
+        titles.appen(title)
+    message_text = "\n".join(messages)
+    title_text = "\n".join(titles)
 
-        # 송신결과 출력
-        print(messages_text)
+    # 송신결과 출력
+    print(messages_text)
 
     # x-www-form-urlencoded 형식으로 메세지 생성
     form_data = {
       "SRV_CODE" : BSRD03",
       "SEND": "xxxxxx",
-      "TITLE": "Alert",
-      "BODY": message_text
+      "TITLE": title_text,
+      "BODY": message_text,
+      "SENDER_ALIAS": "Alertmanager"
     }
 
     # message 전송
